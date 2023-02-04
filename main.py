@@ -1,11 +1,8 @@
-import os
-os.environ['PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION'] = 'python'
-
 from steam.client import SteamClient
 from csgo.client import CSGOClient
 from steam.client.user import SteamUser
 from pathlib import Path
-import sys
+import os
 
 STEAM_SENTRY_LOCATION = './.steam-sentry'
 Path(STEAM_SENTRY_LOCATION).mkdir(parents=True, exist_ok=True)
@@ -37,23 +34,8 @@ def auto_respond(user: SteamUser, message: str):
     user.send_message('Hi, I\'m currency logged in via a CLI script and am unable to respond. Thank you for your message and I will be in touch ASAP.')
 
 
-credentials = []
+username = os.environ.get('STEAM_USERNAME')
+password = os.environ.get('STEAM_PASSWORD')
 
-try:
-    credPath = Path(sys.argv[1])
-
-    if Path.exists(credPath):
-        with open(credPath.absolute()) as my_file:
-            for line in my_file:
-                credentials.append(line)
-
-    print(f'Using credentials stored in {credPath.absolute()}')
-except IndexError:
-    pass
-
-if len(credentials) == 2:
-    client.cli_login(credentials[0].strip(), credentials[1].strip())
-else:
-    client.cli_login()
-
+client.cli_login(username if username is not None else '',password if password is not None else '')
 client.run_forever()

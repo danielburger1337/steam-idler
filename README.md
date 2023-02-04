@@ -10,36 +10,29 @@ python3 main.py
 
 ---
 
-## Persistant Login
+## Automatic Login
 
-1. Create a file called `credentials.txt`
-2. First line must contain your username, second line your password
-
-```txt
-username
-password
-```
-
-3. Execute the script with the file path as argument
+To automatically login, you have to define your username and password as environment variables.
+The script will automatically use these credentials and will only ask you for your 2FA token (if needed).
 
 ```sh
-python3 main.py credentials.txt
+export STEAM_USERNAME=your_username
+export STEAM_PASSWORD=your_password
 ```
 
-After you have successfully logged in for the first time, the sentry created by steam is automatically saved to the `.steam-sentry` directory and future executions of the script will auto login.
+After you have successfully logged in for the first time, the 2FA-sentry created by steam is automatically saved to the `.steam-sentry` directory and future executions of the script will use it. Please note that steam guard users are always prompted for their 2FA code.
 
-If this was setup correctly, you can than run the script as a background process with the following command:
+## Docker Usage
+
+Running this script in docker allows us to basically create a background service (so that you can close the terminal without the script execution stopping).
 
 ```sh
-nohup python3 main.py credentials.txt
+# Start the script with an interactive shell
+docker-compose run --rm --build csgo
 
-# To kill the process
-pkill -f main.py
+# To kill the process when you want to
+docker-compose kill
 ```
-
-`nohup` is a linux utility that prevents a process from shutting down when the terminal session was closed.
-
----
 
 ## Automatic chat reply
 

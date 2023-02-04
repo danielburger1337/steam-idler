@@ -1,0 +1,26 @@
+version: "3.8"
+
+x-restart-policy: &restart_policy
+    restart: unless-stopped
+
+services:
+    csgo:
+        build:
+            context: .
+
+        stdin_open: true
+        tty: true
+
+        <<: *restart_policy
+
+        logging:
+            driver: none
+
+        env_file:
+            - .env
+
+        volumes:
+            - sentry_data:/app/.steam-sentry
+
+volumes:
+    sentry_data:

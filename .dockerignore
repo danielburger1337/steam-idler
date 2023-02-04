@@ -1,0 +1,14 @@
+/.steam-sentry
+
+/env
+/.env
+
+/.git
+/.gitignore
+
+/Dockerfile
+/docker-compose.yml
+
+/.editorconfig
+
+/README.md
