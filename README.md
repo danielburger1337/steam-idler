@@ -28,6 +28,14 @@ python3 main.py credentials.txt
 
 After you have successfully logged in for the first time, the sentry created by steam is automatically saved to the `.steam-sentry` directory and future executions of the script will auto login.
 
+If this was setup correctly, you can than run the script as a background process with the following command:
+
+```sh
+nohup python3 main.py credentials.txt
+```
+
+`nohup` is a linux utility that prevents a process from shutting down when the terminal session was closed.
+
 ---
 
 ## Automatic chat reply
