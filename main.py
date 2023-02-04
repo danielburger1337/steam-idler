@@ -24,6 +24,7 @@ def handle_disconnect():
 
 @client.on(client.EVENT_LOGGED_ON)
 def start_csgo():
+    client.change_status(client.persona_state.Snooze)
     print('Successfully logged in. Launching CSGO...')
     cs.launch()
 
