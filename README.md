@@ -20,6 +20,12 @@ username
 password
 ```
 
+3. Execute the script with the file path as argument
+
+```sh
+python3 main.py credentials.txt
+```
+
 After you have successfully logged in for the first time, the sentry created by steam is automatically saved to the `.steam-sentry` directory and future executions of the script will auto login.
 
 ---
