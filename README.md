@@ -32,6 +32,9 @@ If this was setup correctly, you can than run the script as a background process
 
 ```sh
 nohup python3 main.py credentials.txt
+
+# To kill the process
+pkill -f main.py
 ```
 
 `nohup` is a linux utility that prevents a process from shutting down when the terminal session was closed.
