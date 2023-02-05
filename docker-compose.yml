@@ -5,6 +5,8 @@ x-restart-policy: &restart_policy
 
 services:
     csgo:
+        image: danielburger1337/csgo-hour-boost:latest
+
         build:
             context: .
 
