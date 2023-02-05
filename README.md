@@ -37,3 +37,9 @@ docker-compose kill
 ## Automatic chat reply
 
 Because this script is intended to be run headless (i.e. on a server), the script will automatically reply to all received chat messages with a simple message that lets your friends know that you are currently not available.
+
+By setting a steam id to the `STEAM_FORWARD_TO` environment variable, a copy of all received chat messages is sent to that ID. The signed in account should be friends with the given account.
+
+```sh
+export STEAM_FORWARD_TO="your_steam_id"
+```

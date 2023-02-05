@@ -2,6 +2,8 @@ from steam.client import SteamClient
 from csgo.client import CSGOClient
 from steam.client.user import SteamUser
 from pathlib import Path
+from steam.steamid import SteamID
+from steam.enums import EType
 import os
 
 STEAM_SENTRY_LOCATION = './.steam-sentry'
@@ -34,6 +36,20 @@ def auto_respond(user: SteamUser, message: str):
 
     user.send_message('Hi, I\'m currency logged in via a CLI script and am unable to respond. Thank you for your message and I will be in touch ASAP.')
 
+    forwardTo = os.environ.get('STEAM_FORWARD_TO')
+    forwardId = SteamID(forwardTo)
+
+    # no valid forwarder
+    if forwardTo == None or forwardId.type != EType.Individual:
+        return
+
+    # the sender of the message is the intended target
+    if forwardId.as_64 == user.steam_id.as_64:
+        return
+
+    SteamUser(forwardId.as_64, client).send_message(
+        f'{user.name} sent message: {message}'
+    )
 
 username = os.environ.get('STEAM_USERNAME')
 password = os.environ.get('STEAM_PASSWORD')
