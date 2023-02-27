@@ -12,10 +12,18 @@ Path(STEAM_SENTRY_LOCATION).mkdir(parents=True, exist_ok=True)
 client = SteamClient()
 client.set_credential_location(STEAM_SENTRY_LOCATION)
 
-comanndUserId = SteamID(os.environ.get('STEAM_COMMAND_USER'))
-if (comanndUserId.type != EType.Individual):
-    raise Exception('No or invalid command user defined')
-commandUser = SteamUser(comanndUserId.as_64, client)
+commandUsers = []
+
+for x in os.environ.get('STEAM_COMMAND_USER').split(','):
+    userId = SteamID(x)
+    if (userId.type != EType.Individual):
+        raise Exception(f'"{x}" is not a valid steam id.')
+
+    commandUsers.append(SteamUser(userId.as_64, client))
+
+if len(commandUsers) < 1:
+    raise Exception('At least one command user must be defined.')
+
 
 cs = CSGOClient(client)
 
@@ -38,20 +46,23 @@ def handle_login():
 def auto_respond(user: SteamUser, message: str):
     print(f'{user.name} sent message: "{message}"')
 
-    if commandUser.steam_id.as_64 != user.steam_id.as_64:
-        # Generic reply
-        user.send_message('Hi, I\'m currency logged in via a CLI script and am unable to respond. Thank you for your message and I will be in touch ASAP.')
-        # Send a copy of the message to the command user
-        commandUser.send_message(f'{user.name} sent message: {message}')
-        return
+    for commandUser in commandUsers:
+        if commandUser.steam_id.as_64 == user.steam_id.as_64:
+            messageLower = message.lower()
 
-    messageLower = message.lower()
-    if messageLower == '.stop':
-        cs.exit()
-    elif (messageLower == '.start'):
-        cs.launch()
-    else:
-        commandUser.send_message('Sorry, I dont know this command.')
+            if messageLower == '.start':
+                cs.launch()
+            elif (messageLower == '.stop'):
+                cs.exit()
+            else:
+                user.send_message('Sorry, I dont know this command.')
+
+            return
+
+    # Generic reply
+    user.send_message('Hi, I\'m currency logged in via a CLI script and am unable to respond. Thank you for your message and I will be in touch ASAP.')
+    # Send a copy of the message to the first command user
+    commandUsers[0].send_message(f'{user.name} sent message: {message}')
 
 
 username = os.environ.get('STEAM_USERNAME')
