@@ -12,6 +12,11 @@ Path(STEAM_SENTRY_LOCATION).mkdir(parents=True, exist_ok=True)
 client = SteamClient()
 client.set_credential_location(STEAM_SENTRY_LOCATION)
 
+comanndUserId = SteamID(os.environ.get('STEAM_COMMAND_USER'))
+if (comanndUserId.type != EType.Individual):
+    raise Exception('No or invalid command user defined')
+commandUser = SteamUser(comanndUserId.as_64, client)
+
 cs = CSGOClient(client)
 
 @client.on(client.EVENT_CHANNEL_SECURED)
@@ -25,31 +30,29 @@ def handle_disconnect():
         client.reconnect(30)
 
 @client.on(client.EVENT_LOGGED_ON)
-def start_csgo():
+def handle_login():
     client.change_status(persona_state=client.persona_state.Snooze)
-    print('Successfully logged in. Launching CSGO...')
-    cs.launch()
+    print(f'Successfully logged in as "{client.user.name}"')
 
 @client.on(client.EVENT_CHAT_MESSAGE)
 def auto_respond(user: SteamUser, message: str):
-    print(f'{user.name} sent message: {message}')
+    print(f'{user.name} sent message: "{message}"')
 
-    user.send_message('Hi, I\'m currency logged in via a CLI script and am unable to respond. Thank you for your message and I will be in touch ASAP.')
-
-    forwardTo = os.environ.get('STEAM_FORWARD_TO')
-    forwardId = SteamID(forwardTo)
-
-    # no valid forwarder
-    if forwardTo == None or forwardId.type != EType.Individual:
+    if commandUser.steam_id.as_64 != user.steam_id.as_64:
+        # Generic reply
+        user.send_message('Hi, I\'m currency logged in via a CLI script and am unable to respond. Thank you for your message and I will be in touch ASAP.')
+        # Send a copy of the message to the command user
+        commandUser.send_message(f'{user.name} sent message: {message}')
         return
 
-    # the sender of the message is the intended target
-    if forwardId.as_64 == user.steam_id.as_64:
-        return
+    messageLower = message.lower()
+    if messageLower == '.logout':
+        cs.exit()
+    elif (messageLower == '.login'):
+        cs.launch()
+    else:
+        commandUser.send_message('Sorry, I dont know this command.')
 
-    SteamUser(forwardId.as_64, client).send_message(
-        f'{user.name} sent message: {message}'
-    )
 
 username = os.environ.get('STEAM_USERNAME')
 password = os.environ.get('STEAM_PASSWORD')
