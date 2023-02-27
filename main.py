@@ -46,9 +46,9 @@ def auto_respond(user: SteamUser, message: str):
         return
 
     messageLower = message.lower()
-    if messageLower == '.logout':
+    if messageLower == '.start':
         cs.exit()
-    elif (messageLower == '.login'):
+    elif (messageLower == '.stop'):
         cs.launch()
     else:
         commandUser.send_message('Sorry, I dont know this command.')
