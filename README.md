@@ -12,10 +12,8 @@ python3 main.py
 
 ## How it works
 
-This script functions by having a commander (STEAM_COMMAND_USER) sending chat messages to the signed in user
-with commands that the currently signed in user must take.
-
-Valid commands are:
+This script works by having a commander (STEAM_COMMAND_USER) sending chat messages to the currently signed in user
+with commands that the bot will follow. Valid commands are:
 
 -   **.start** <br> This command starts CS:GO
 -   **.stop** <br> This command stops CS:GO
