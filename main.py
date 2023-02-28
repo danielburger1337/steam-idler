@@ -46,10 +46,10 @@ def handle_login():
 def auto_respond(user: SteamUser, message: str):
     print(f'{user.name} sent message: "{message}"')
 
+    messageLower = message.lower().strip()
+
     for commandUser in commandUsers:
         if commandUser.steam_id.as_64 == user.steam_id.as_64:
-            messageLower = message.lower()
-
             if messageLower == '.start':
                 cs.launch()
             elif (messageLower == '.stop'):
@@ -59,11 +59,12 @@ def auto_respond(user: SteamUser, message: str):
 
             return
 
-    # Generic reply
-    user.send_message('Hi, I\'m currency logged in via a CLI script and am unable to respond. Thank you for your message and I will be in touch ASAP.')
+    if messageLower.endswith('[/lobbyinvite]') == False:
+        # Generic reply
+        user.send_message('Hi, I\'m currency logged in via a CLI script and am unable to respond. Thank you for your message and I will be in touch ASAP.')
+
     # Send a copy of the message to the first command user
     commandUsers[0].send_message(f'{user.name} sent message: {message}')
-
 
 username = os.environ.get('STEAM_USERNAME')
 password = os.environ.get('STEAM_PASSWORD')
