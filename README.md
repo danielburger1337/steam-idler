@@ -1,4 +1,4 @@
-# CS:GO Hour Booster
+# Steam Idler
 
 The script will automatically ask you for your credentials and optional 2FA code (provided by [ValvePython/steam](https://github.com/ValvePython/steam)).
 
@@ -15,11 +15,12 @@ python3 main.py
 This script works by having a commander (STEAM_COMMAND_USER) sending chat messages to the currently signed in user
 with commands that the bot will follow. Valid commands are:
 
--   **.start** <br> This command starts CS:GO
--   **.stop** <br> This command stops CS:GO
+-   **.start** <br> This command starts games defined in `STEAM_APP_IDS`
+-   **.stop** <br> This command stops all games
 
 ```sh
 export STEAM_COMMAND_USER="your_steam_id"
+export STEAM_APP_IDS="570,730"
 ```
 
 ## Login
@@ -40,7 +41,7 @@ Running this script in docker allows us to basically create a background service
 
 ```sh
 # Start the script with an interactive shell
-docker-compose run --rm --build csgo
+docker-compose run --rm --build idler
 
 # To kill the process when you want to
 docker-compose kill

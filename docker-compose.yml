@@ -4,8 +4,8 @@ x-restart-policy: &restart_policy
     restart: unless-stopped
 
 services:
-    csgo:
-        image: danielburger1337/csgo-hour-boost:latest
+    idler:
+        image: danielburger1337/steam-idler:latest
 
         build:
             context: .
