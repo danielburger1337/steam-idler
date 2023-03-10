@@ -63,7 +63,12 @@ def auto_respond(user: SteamUser, message: str):
                     games_to_play.remove(int(game_id))
 
                     client.games_played(games_to_play)
-
+            elif (messageLower == '.online'):
+                client.change_status(persona_state=client.persona_state.Online)
+            elif (messageLower == '.snooze'):
+                client.change_status(persona_state=client.persona_state.Snooze)
+            elif (messageLower == '.invisible'):
+                client.change_status(persona_state=client.persona_state.Invisible)
             else:
                 user.send_message('Sorry, I dont know this command.')
 
