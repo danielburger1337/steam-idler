@@ -23,10 +23,6 @@ for x in os.environ.get('STEAM_COMMAND_USER').split(','):
 if len(commandUsers) < 1:
     raise Exception('At least one command user must be defined.')
 
-appIds = []
-for appId in os.environ.get('STEAM_APP_IDS').split(','):
-    appIds.append(int(appId))
-
 @client.on(client.EVENT_CHANNEL_SECURED)
 def send_login():
     if client.relogin_available:
@@ -50,10 +46,24 @@ def auto_respond(user: SteamUser, message: str):
 
     for commandUser in commandUsers:
         if commandUser.steam_id.as_64 == user.steam_id.as_64:
-            if messageLower == '.start':
-                client.games_played(appIds)
-            elif (messageLower == '.stop'):
-                client.games_played([])
+            if messageLower.startswith('.start'):
+                game_id = messageLower.replace('.start ', '')
+
+                if game_id.isdigit() and int(game_id) not in client.current_games_played:
+                    games_to_play = client.current_games_played.copy()
+                    games_to_play.append(int(game_id))
+
+                    client.games_played(games_to_play)
+
+            elif (messageLower.startswith('.stop')):
+                game_id = messageLower.replace('.stop ', '')
+
+                if game_id.isdigit() and int(game_id) in client.current_games_played:
+                    games_to_play = client.current_games_played.copy()
+                    games_to_play.remove(int(game_id))
+
+                    client.games_played(games_to_play)
+
             else:
                 user.send_message('Sorry, I dont know this command.')
 

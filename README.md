@@ -15,12 +15,11 @@ python3 main.py
 This script works by having a commander (STEAM_COMMAND_USER) sending chat messages to the currently signed in user
 with commands that the bot will follow. Valid commands are:
 
--   **.start** <br> This command starts games defined in `STEAM_APP_IDS`
--   **.stop** <br> This command stops all games
+-   **.start APP_ID** <br> This command starts the specified app id
+-   **.stop APP_ID** <br> This command stops the specified app id
 
 ```sh
 export STEAM_COMMAND_USER="your_steam_id"
-export STEAM_APP_IDS="570,730"
 ```
 
 ## Login
