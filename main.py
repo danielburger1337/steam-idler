@@ -1,5 +1,4 @@
 from steam.client import SteamClient
-from csgo.client import CSGOClient
 from steam.client.user import SteamUser
 from pathlib import Path
 from steam.steamid import SteamID
@@ -24,8 +23,9 @@ for x in os.environ.get('STEAM_COMMAND_USER').split(','):
 if len(commandUsers) < 1:
     raise Exception('At least one command user must be defined.')
 
-
-cs = CSGOClient(client)
+appIds = []
+for appId in os.environ.get('STEAM_APP_IDS').split(','):
+    appIds.append(int(appId))
 
 @client.on(client.EVENT_CHANNEL_SECURED)
 def send_login():
@@ -51,9 +51,9 @@ def auto_respond(user: SteamUser, message: str):
     for commandUser in commandUsers:
         if commandUser.steam_id.as_64 == user.steam_id.as_64:
             if messageLower == '.start':
-                cs.launch()
+                client.games_played(appIds)
             elif (messageLower == '.stop'):
-                cs.exit()
+                client.games_played([])
             else:
                 user.send_message('Sorry, I dont know this command.')
 
